@@ -1,0 +1,2803 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "DSS WebServices",
+    "contact" : { },
+    "license" : {
+      "name" : "Apache 2.0 License",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+	"version": "5.6"
+  },
+  "servers" : [ {
+    "url" : "http://dss.mise.gov.it/dss-webapp/services/rest/certificate-validation"
+  } ],
+  "paths" : {
+    "/validateCertificate" : {
+      "post" : {
+        "operationId" : "validateCertificate",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CertificateToValidateDTO"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CertificateReportsDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "CertificateReportsDTO" : {
+        "type" : "object",
+        "properties" : {
+          "diagnosticData" : {
+            "$ref" : "#/components/schemas/XmlDiagnosticData"
+          },
+          "simpleCertificateReport" : {
+            "$ref" : "#/components/schemas/XmlSimpleCertificateReport"
+          },
+          "detailedReport" : {
+            "$ref" : "#/components/schemas/XmlDetailedReport"
+          }
+        }
+      },
+      "XmlAbstractToken" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlBasicBuildingBlocks" : {
+        "type" : "object",
+        "properties" : {
+          "fc" : {
+            "$ref" : "#/components/schemas/XmlFC"
+          },
+          "isc" : {
+            "$ref" : "#/components/schemas/XmlISC"
+          },
+          "vci" : {
+            "$ref" : "#/components/schemas/XmlVCI"
+          },
+          "xcv" : {
+            "$ref" : "#/components/schemas/XmlXCV"
+          },
+          "cv" : {
+            "$ref" : "#/components/schemas/XmlCV"
+          },
+          "sav" : {
+            "$ref" : "#/components/schemas/XmlSAV"
+          },
+          "psv" : {
+            "$ref" : "#/components/schemas/XmlPSV"
+          },
+          "pcv" : {
+            "$ref" : "#/components/schemas/XmlPCV"
+          },
+          "vts" : {
+            "$ref" : "#/components/schemas/XmlVTS"
+          },
+          "certificateChain" : {
+            "$ref" : "#/components/schemas/XmlCertificateChain"
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          },
+          "type" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Type",
+              "attribute" : true
+            },
+            "enum" : [ "SIGNATURE", "COUNTER_SIGNATURE", "TIMESTAMP", "REVOCATION", "CERTIFICATE" ]
+          }
+        }
+      },
+      "XmlBasicSignature" : {
+        "type" : "object",
+        "properties" : {
+          "encryptionAlgoUsedToSignThisToken" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "EncryptionAlgoUsedToSignThisToken"
+            },
+            "enum" : [ "RSA", "DSA", "ECDSA", "PLAIN_ECDSA", "HMAC" ]
+          },
+          "keyLengthUsedToSignThisToken" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "KeyLengthUsedToSignThisToken"
+            }
+          },
+          "digestAlgoUsedToSignThisToken" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "DigestAlgoUsedToSignThisToken"
+            },
+            "enum" : [ "SHA1", "SHA224", "SHA256", "SHA384", "SHA512", "SHA3_224", "SHA3_256", "SHA3_384", "SHA3_512", "RIPEMD160", "MD2", "MD5", "WHIRLPOOL" ]
+          },
+          "maskGenerationFunctionUsedToSignThisToken" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "MaskGenerationFunctionUsedToSignThisToken"
+            },
+            "enum" : [ "MGF1" ]
+          },
+          "signatureIntact" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "SignatureIntact"
+            }
+          },
+          "signatureValid" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "SignatureValid"
+            }
+          }
+        }
+      },
+      "XmlCV" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlCertificate" : {
+        "required" : [ "issuerDistinguishedName", "notAfter", "notBefore", "publicKeyEncryptionAlgo", "serialNumber", "subjectDistinguishedName" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          },
+          "subjectDistinguishedName" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "SubjectDistinguishedName"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlDistinguishedName"
+            }
+          },
+          "issuerDistinguishedName" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "IssuerDistinguishedName"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlDistinguishedName"
+            }
+          },
+          "serialNumber" : {
+            "type" : "integer",
+            "xml" : {
+              "name" : "SerialNumber"
+            }
+          },
+          "commonName" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "CommonName"
+            }
+          },
+          "locality" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Locality"
+            }
+          },
+          "state" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "State"
+            }
+          },
+          "countryName" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "CountryName"
+            }
+          },
+          "organizationName" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "OrganizationName"
+            }
+          },
+          "givenName" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "GivenName"
+            }
+          },
+          "organizationalUnit" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "OrganizationalUnit"
+            }
+          },
+          "surname" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Surname"
+            }
+          },
+          "pseudonym" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Pseudonym"
+            }
+          },
+          "email" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Email"
+            }
+          },
+          "authorityInformationAccessUrls" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "AuthorityInformationAccessUrls",
+              "wrapped" : true
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Transformation"
+              }
+            }
+          },
+          "sources" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Sources",
+              "wrapped" : true
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Source"
+              },
+              "enum" : [ "TRUSTED_STORE", "TRUSTED_LIST", "SIGNATURE", "OCSP_RESPONSE", "OTHER", "AIA", "TIMESTAMP", "UNKNOWN" ]
+            }
+          },
+          "notAfter" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "NotAfter"
+            }
+          },
+          "notBefore" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "NotBefore"
+            }
+          },
+          "publicKeySize" : {
+            "type" : "integer",
+            "format" : "int32",
+            "xml" : {
+              "name" : "PublicKeySize"
+            }
+          },
+          "publicKeyEncryptionAlgo" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "PublicKeyEncryptionAlgo"
+            },
+            "enum" : [ "RSA", "DSA", "ECDSA", "PLAIN_ECDSA", "HMAC" ]
+          },
+          "keyUsageBits" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "KeyUsageBits",
+              "wrapped" : true
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "KeyUsage"
+              },
+              "enum" : [ "DIGITAL_SIGNATURE", "NON_REPUDIATION", "KEY_ENCIPHERMENT", "DATA_ENCIPHERMENT", "KEY_AGREEMENT", "KEY_CERT_SIGN", "CRL_SIGN", "ENCIPHER_ONLY", "DECIPHER_ONLY" ]
+            }
+          },
+          "extendedKeyUsages" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "ExtendedKeyUsages",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlOID"
+            }
+          },
+          "idPkixOcspNoCheck" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "IdPkixOcspNoCheck"
+            }
+          },
+          "basicSignature" : {
+            "$ref" : "#/components/schemas/XmlBasicSignature"
+          },
+          "signingCertificate" : {
+            "$ref" : "#/components/schemas/XmlSigningCertificate"
+          },
+          "certificateChain" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "CertificateChain",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlChainItem"
+            }
+          },
+          "trusted" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "Trusted"
+            }
+          },
+          "selfSigned" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "SelfSigned"
+            }
+          },
+          "certificatePolicies" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "CertificatePolicies",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlCertificatePolicy"
+            }
+          },
+          "trustedServiceProviders" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "TrustedServiceProviders",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlTrustedServiceProvider"
+            }
+          },
+          "revocations" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Revocations",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlCertificateRevocation"
+            }
+          },
+          "base64Encoded" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Base64Encoded"
+            },
+            "items" : {
+              "type" : "string",
+              "format" : "byte",
+              "xml" : {
+                "name" : "SignatureValue"
+              }
+            }
+          },
+          "digestAlgoAndValue" : {
+            "$ref" : "#/components/schemas/XmlDigestAlgoAndValue"
+          },
+          "crldistributionPoints" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Transformation"
+              }
+            }
+          },
+          "ocspaccessUrls" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Transformation"
+              }
+            }
+          },
+          "qcstatementIds" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/XmlOID"
+            }
+          },
+          "qctypes" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/XmlOID"
+            }
+          }
+        }
+      },
+      "XmlCertificateChain" : {
+        "type" : "object",
+        "properties" : {
+          "chainItem" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "ChainItem"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlChainItem"
+            }
+          }
+        }
+      },
+      "XmlCertificatePolicy" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Description",
+              "attribute" : true
+            }
+          },
+          "cpsUrl" : {
+            "type" : "string",
+            "xml" : {
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlCertificateRef" : {
+        "required" : [ "origin" ],
+        "type" : "object",
+        "properties" : {
+          "origin" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Origin"
+            },
+            "enum" : [ "ATTRIBUTE_CERTIFICATE_REFS", "COMPLETE_CERTIFICATE_REFS", "SIGNING_CERTIFICATE" ]
+          },
+          "issuerSerial" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "IssuerSerial"
+            },
+            "items" : {
+              "type" : "string",
+              "format" : "byte",
+              "xml" : {
+                "name" : "IssuerSerial"
+              }
+            }
+          },
+          "digestAlgoAndValue" : {
+            "$ref" : "#/components/schemas/XmlDigestAlgoAndValue"
+          }
+        }
+      },
+      "XmlCertificateRevocation" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "Status"
+            }
+          },
+          "reason" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Reason"
+            },
+            "enum" : [ "UNSPECIFIED", "KEY_COMPROMISE", "CA_COMPROMISE", "AFFILIATION_CHANGED", "SUPERSEDED", "CESSATION_OF_OPERATION", "CERTIFICATE_HOLD", "REMOVE_FROM_CRL", "PRIVILEGE_WITHDRAWN", "AA_COMPROMISE" ]
+          },
+          "revocationDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "RevocationDate"
+            }
+          },
+          "revocation" : {
+            "$ref" : "#/components/schemas/XmlRevocation"
+          }
+        }
+      },
+      "XmlChainItem" : {
+        "required" : [ "source" ],
+        "type" : "object",
+        "properties" : {
+          "source" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Source"
+            },
+            "enum" : [ "TRUSTED_STORE", "TRUSTED_LIST", "SIGNATURE", "OCSP_RESPONSE", "OTHER", "AIA", "TIMESTAMP", "UNKNOWN" ]
+          },
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlConclusion" : {
+        "required" : [ "indication" ],
+        "type" : "object",
+        "properties" : {
+          "indication" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Indication"
+            },
+            "enum" : [ "TOTAL_PASSED", "TOTAL_FAILED", "INDETERMINATE", "PASSED", "FAILED", "NO_SIGNATURE_FOUND" ]
+          },
+          "subIndication" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "SubIndication"
+            },
+            "enum" : [ "FORMAT_FAILURE", "HASH_FAILURE", "SIG_CRYPTO_FAILURE", "REVOKED", "SIG_CONSTRAINTS_FAILURE", "CHAIN_CONSTRAINTS_FAILURE", "CERTIFICATE_CHAIN_GENERAL_FAILURE", "CRYPTO_CONSTRAINTS_FAILURE", "EXPIRED", "NOT_YET_VALID", "POLICY_PROCESSING_ERROR", "SIGNATURE_POLICY_NOT_AVAILABLE", "TIMESTAMP_ORDER_FAILURE", "NO_SIGNING_CERTIFICATE_FOUND", "NO_CERTIFICATE_CHAIN_FOUND", "REVOKED_NO_POE", "REVOKED_CA_NO_POE", "OUT_OF_BOUNDS_NO_POE", "OUT_OF_BOUNDS_NOT_REVOKED", "CRYPTO_CONSTRAINTS_FAILURE_NO_POE", "NO_POE", "TRY_LATER", "SIGNED_DATA_NOT_FOUND" ]
+          },
+          "errors" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Errors"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlName"
+            }
+          },
+          "warnings" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Warnings"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlName"
+            }
+          },
+          "infos" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Infos"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlName"
+            }
+          }
+        }
+      },
+      "XmlConstraint" : {
+        "required" : [ "status" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "$ref" : "#/components/schemas/XmlName"
+          },
+          "status" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Status"
+            },
+            "enum" : [ "OK", "NOT_OK", "IGNORED", "INFORMATION", "WARNING" ]
+          },
+          "error" : {
+            "$ref" : "#/components/schemas/XmlName"
+          },
+          "warning" : {
+            "$ref" : "#/components/schemas/XmlName"
+          },
+          "info" : {
+            "$ref" : "#/components/schemas/XmlName"
+          },
+          "additionalInfo" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "AdditionalInfo"
+            }
+          },
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlContainerInfo" : {
+        "type" : "object",
+        "properties" : {
+          "containerType" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ContainerType"
+            }
+          },
+          "zipComment" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ZipComment"
+            }
+          },
+          "mimeTypeFilePresent" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "MimeTypeFilePresent"
+            }
+          },
+          "mimeTypeContent" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "MimeTypeContent"
+            }
+          },
+          "manifestFiles" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "ManifestFiles",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlManifestFile"
+            }
+          },
+          "contentFiles" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "ContentFiles",
+              "wrapped" : true
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "ContentFile"
+              }
+            }
+          }
+        }
+      },
+      "XmlCryptographicInformation" : {
+        "required" : [ "algorithm", "keyLength" ],
+        "type" : "object",
+        "properties" : {
+          "algorithm" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Algorithm"
+            }
+          },
+          "keyLength" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "KeyLength"
+            }
+          },
+          "secure" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "Secure"
+            }
+          },
+          "notAfter" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "NotAfter"
+            }
+          }
+        }
+      },
+      "XmlDetailedReport" : {
+        "type" : "object",
+        "properties" : {
+          "signatureOrTimestampOrCertificate" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object"
+            }
+          },
+          "basicBuildingBlocks" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "BasicBuildingBlocks"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlBasicBuildingBlocks"
+            }
+          },
+          "tlanalysis" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/XmlTLAnalysis"
+            }
+          }
+        }
+      },
+      "XmlDiagnosticData" : {
+        "required" : [ "validationDate" ],
+        "type" : "object",
+        "properties" : {
+          "documentName" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "DocumentName"
+            }
+          },
+          "validationDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "ValidationDate"
+            }
+          },
+          "containerInfo" : {
+            "$ref" : "#/components/schemas/XmlContainerInfo"
+          },
+          "signatures" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Signatures",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlSignature"
+            }
+          },
+          "usedCertificates" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "UsedCertificates",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlCertificate"
+            }
+          },
+          "usedRevocations" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "UsedRevocations",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlRevocation"
+            }
+          },
+          "usedTimestamps" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "UsedTimestamps",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlTimestamp"
+            }
+          },
+          "orphanTokens" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "OrphanTokens",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlOrphanToken"
+            }
+          },
+          "originalDocuments" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "OriginalDocuments",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlSignerData"
+            }
+          },
+          "trustedLists" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "TrustedLists",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlTrustedList"
+            }
+          }
+        }
+      },
+      "XmlDigestAlgoAndValue" : {
+        "type" : "object",
+        "properties" : {
+          "digestMethod" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "DigestMethod"
+            },
+            "enum" : [ "SHA1", "SHA224", "SHA256", "SHA384", "SHA512", "SHA3_224", "SHA3_256", "SHA3_384", "SHA3_512", "RIPEMD160", "MD2", "MD5", "WHIRLPOOL" ]
+          },
+          "digestValue" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "DigestValue"
+            },
+            "items" : {
+              "type" : "string",
+              "format" : "byte",
+              "xml" : {
+                "name" : "IssuerSerial"
+              }
+            }
+          }
+        }
+      },
+      "XmlDigestMatcher" : {
+        "type" : "object",
+        "properties" : {
+          "digestMethod" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "DigestMethod"
+            },
+            "enum" : [ "SHA1", "SHA224", "SHA256", "SHA384", "SHA512", "SHA3_224", "SHA3_256", "SHA3_384", "SHA3_512", "RIPEMD160", "MD2", "MD5", "WHIRLPOOL" ]
+          },
+          "digestValue" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "DigestValue"
+            },
+            "items" : {
+              "type" : "string",
+              "format" : "byte",
+              "xml" : {
+                "name" : "DigestValue"
+              }
+            }
+          },
+          "dataFound" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "DataFound"
+            }
+          },
+          "dataIntact" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "DataIntact"
+            }
+          },
+          "type" : {
+            "type" : "string",
+            "xml" : {
+              "attribute" : true
+            },
+            "enum" : [ "REFERENCE", "OBJECT", "MANIFEST", "SIGNED_PROPERTIES", "KEY_INFO", "XPOINTER", "MANIFEST_ENTRY", "MESSAGE_DIGEST", "CONTENT_DIGEST", "MESSAGE_IMPRINT" ]
+          },
+          "name" : {
+            "type" : "string",
+            "xml" : {
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlDistinguishedName" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
+          },
+          "format" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Format",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlFC" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlFoundCertificates" : {
+        "type" : "object",
+        "properties" : {
+          "relatedCertificates" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "RelatedCertificate"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlRelatedCertificate"
+            }
+          },
+          "orphanCertificates" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "OrphanCertificate"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlOrphanCertificate"
+            }
+          }
+        }
+      },
+      "XmlFoundRevocations" : {
+        "type" : "object",
+        "properties" : {
+          "relatedRevocations" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "RelatedRevocation"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlRelatedRevocation"
+            }
+          },
+          "orphanRevocations" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "OrphanRevocation"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlOrphanRevocation"
+            }
+          }
+        }
+      },
+      "XmlFoundTimestamp" : {
+        "type" : "object",
+        "properties" : {
+          "timestamp" : {
+            "$ref" : "#/components/schemas/XmlTimestamp"
+          },
+          "location" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Location",
+              "attribute" : true
+            },
+            "enum" : [ "XAdES", "CAdES", "DOC_TIMESTAMP" ]
+          }
+        }
+      },
+      "XmlISC" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          },
+          "certificateChain" : {
+            "$ref" : "#/components/schemas/XmlCertificateChain"
+          }
+        }
+      },
+      "XmlLangAndValue" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
+          },
+          "lang" : {
+            "type" : "string",
+            "xml" : {
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlManifestFile" : {
+        "type" : "object",
+        "properties" : {
+          "filename" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Filename"
+            }
+          },
+          "signatureFilename" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "SignatureFilename"
+            }
+          },
+          "entries" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Entries",
+              "wrapped" : true
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Entry"
+              }
+            }
+          }
+        }
+      },
+      "XmlName" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
+          },
+          "nameId" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "NameId",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlOID" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Description",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlOrphanCertificate" : {
+        "type" : "object",
+        "properties" : {
+          "origins" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Origin"
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Origin"
+              },
+              "enum" : [ "KEY_INFO", "CERTIFICATE_VALUES", "ATTR_AUTORITIES_CERT_VALUES", "TIMESTAMP_VALIDATION_DATA", "DSS_DICTIONARY", "VRI_DICTIONARY", "TIMESTAMP_CERTIFICATE_VALUES" ]
+            }
+          },
+          "certificateRefs" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "CertificateRef"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlCertificateRef"
+            }
+          },
+          "token" : {
+            "$ref" : "#/components/schemas/XmlOrphanToken"
+          }
+        }
+      },
+      "XmlOrphanRevocation" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Type"
+            },
+            "enum" : [ "CRL", "OCSP" ]
+          },
+          "origins" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Origin"
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Origin"
+              },
+              "enum" : [ "CMS_SIGNED_DATA", "TIMESTAMP_SIGNED_DATA", "REVOCATION_VALUES", "ATTRIBUTE_REVOCATION_VALUES", "TIMESTAMP_VALIDATION_DATA", "DSS_DICTIONARY", "VRI_DICTIONARY", "TIMESTAMP_REVOCATION_VALUES", "ADBE_REVOCATION_INFO_ARCHIVAL", "INPUT_DOCUMENT", "EXTERNAL", "CACHED" ]
+            }
+          },
+          "revocationRefs" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "RevocationRef"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlRevocationRef"
+            }
+          },
+          "token" : {
+            "$ref" : "#/components/schemas/XmlOrphanToken"
+          }
+        }
+      },
+      "XmlOrphanToken" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          },
+          "type" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Type"
+            },
+            "enum" : [ "CERTIFICATE", "REVOCATION" ]
+          },
+          "base64Encoded" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Base64Encoded"
+            },
+            "items" : {
+              "type" : "string",
+              "format" : "byte",
+              "xml" : {
+                "name" : "SignatureValue"
+              }
+            }
+          },
+          "digestAlgoAndValue" : {
+            "$ref" : "#/components/schemas/XmlDigestAlgoAndValue"
+          }
+        }
+      },
+      "XmlPCV" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          },
+          "controlTime" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "ControlTime"
+            }
+          }
+        }
+      },
+      "XmlPDFRevision" : {
+        "type" : "object",
+        "properties" : {
+          "signatureFieldName" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "SignatureFieldName"
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "SignatureFieldName"
+              }
+            }
+          },
+          "signerInformationStore" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "SignerInformationStore",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlSignerInfo"
+            }
+          },
+          "pdfsignatureDictionary" : {
+            "$ref" : "#/components/schemas/XmlPDFSignatureDictionary"
+          }
+        }
+      },
+      "XmlPDFSignatureDictionary" : {
+        "type" : "object",
+        "properties" : {
+          "signerName" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "SignerName"
+            }
+          },
+          "type" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Type"
+            }
+          },
+          "filter" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Filter"
+            }
+          },
+          "subFilter" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "SubFilter"
+            }
+          },
+          "contactInfo" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ContactInfo"
+            }
+          },
+          "reason" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Reason"
+            }
+          },
+          "signatureByteRange" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "SignatureByteRange"
+            },
+            "items" : {
+              "type" : "integer",
+              "xml" : {
+                "name" : "SignatureByteRange"
+              }
+            }
+          }
+        }
+      },
+      "XmlPSV" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          },
+          "controlTime" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "ControlTime"
+            }
+          }
+        }
+      },
+      "XmlPolicy" : {
+        "required" : [ "id" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id"
+            }
+          },
+          "url" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Url"
+            }
+          },
+          "description" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Description"
+            }
+          },
+          "notice" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Notice"
+            }
+          },
+          "zeroHash" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "ZeroHash"
+            }
+          },
+          "digestAlgoAndValue" : {
+            "$ref" : "#/components/schemas/XmlDigestAlgoAndValue"
+          },
+          "asn1Processable" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "Asn1Processable"
+            }
+          },
+          "identified" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "Identified"
+            }
+          },
+          "status" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "Status"
+            }
+          },
+          "processingError" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ProcessingError"
+            }
+          },
+          "digestAlgorithmsEqual" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "DigestAlgorithmsEqual"
+            }
+          }
+        }
+      },
+      "XmlRAC" : {
+        "required" : [ "revocationProductionDate" ],
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          },
+          "revocationProductionDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "RevocationProductionDate"
+            }
+          },
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlRFC" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          },
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlRelatedCertificate" : {
+        "type" : "object",
+        "properties" : {
+          "origins" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Origin"
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Origin"
+              },
+              "enum" : [ "KEY_INFO", "CERTIFICATE_VALUES", "ATTR_AUTORITIES_CERT_VALUES", "TIMESTAMP_VALIDATION_DATA", "DSS_DICTIONARY", "VRI_DICTIONARY", "TIMESTAMP_CERTIFICATE_VALUES" ]
+            }
+          },
+          "certificateRefs" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "CertificateRef"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlCertificateRef"
+            }
+          },
+          "certificate" : {
+            "$ref" : "#/components/schemas/XmlCertificate"
+          }
+        }
+      },
+      "XmlRelatedRevocation" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Type"
+            },
+            "enum" : [ "CRL", "OCSP" ]
+          },
+          "origins" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Origin"
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Origin"
+              },
+              "enum" : [ "CMS_SIGNED_DATA", "TIMESTAMP_SIGNED_DATA", "REVOCATION_VALUES", "ATTRIBUTE_REVOCATION_VALUES", "TIMESTAMP_VALIDATION_DATA", "DSS_DICTIONARY", "VRI_DICTIONARY", "TIMESTAMP_REVOCATION_VALUES", "ADBE_REVOCATION_INFO_ARCHIVAL", "INPUT_DOCUMENT", "EXTERNAL", "CACHED" ]
+            }
+          },
+          "revocationRefs" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "RevocationRef"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlRevocationRef"
+            }
+          },
+          "revocation" : {
+            "$ref" : "#/components/schemas/XmlRevocation"
+          }
+        }
+      },
+      "XmlRevocation" : {
+        "type" : "object",
+        "properties" : {
+          "productionDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "revocationDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "revocationReason" : {
+            "type" : "string",
+            "enum" : [ "UNSPECIFIED", "KEY_COMPROMISE", "CA_COMPROMISE", "AFFILIATION_CHANGED", "SUPERSEDED", "CESSATION_OF_OPERATION", "CERTIFICATE_HOLD", "REMOVE_FROM_CRL", "PRIVILEGE_WITHDRAWN", "AA_COMPROMISE" ]
+          }
+        }
+      },
+      "XmlRevocationInformation" : {
+        "required" : [ "certificateId", "revocationDate", "revocationId" ],
+        "type" : "object",
+        "properties" : {
+          "certificateId" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "CertificateId"
+            }
+          },
+          "revocationId" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "RevocationId"
+            }
+          },
+          "reason" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Reason"
+            },
+            "enum" : [ "UNSPECIFIED", "KEY_COMPROMISE", "CA_COMPROMISE", "AFFILIATION_CHANGED", "SUPERSEDED", "CESSATION_OF_OPERATION", "CERTIFICATE_HOLD", "REMOVE_FROM_CRL", "PRIVILEGE_WITHDRAWN", "AA_COMPROMISE" ]
+          },
+          "revocationDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "RevocationDate"
+            }
+          }
+        }
+      },
+      "XmlRevocationRef" : {
+        "required" : [ "origins" ],
+        "type" : "object",
+        "properties" : {
+          "origins" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Origin"
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Origin"
+              },
+              "enum" : [ "COMPLETE_REVOCATION_REFS", "ATTRIBUTE_REVOCATION_REFS", "TIMESTAMP_REVOCATION_REFS" ]
+            }
+          },
+          "digestAlgoAndValue" : {
+            "$ref" : "#/components/schemas/XmlDigestAlgoAndValue"
+          },
+          "producedAt" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "ProducedAt"
+            }
+          },
+          "responderIdName" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ResponderIdName"
+            }
+          },
+          "responderIdKey" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "ResponderIdKey"
+            },
+            "items" : {
+              "type" : "string",
+              "format" : "byte",
+              "xml" : {
+                "name" : "ResponderIdKey"
+              }
+            }
+          }
+        }
+      },
+      "XmlSAV" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          },
+          "cryptographicInfo" : {
+            "$ref" : "#/components/schemas/XmlCryptographicInformation"
+          },
+          "validationTime" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "ValidationTime",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlSignature" : {
+        "required" : [ "signatureFilename", "signatureFormat" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          },
+          "signatureFilename" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "SignatureFilename"
+            }
+          },
+          "errorMessage" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ErrorMessage"
+            }
+          },
+          "claimedSigningTime" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "ClaimedSigningTime"
+            }
+          },
+          "signatureFormat" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "SignatureFormat"
+            },
+            "enum" : [ "XML-NOT-ETSI", "XAdES-C", "XAdES-X", "XAdES-XL", "XAdES-A", "XAdES-BASELINE-LTA", "XAdES-BASELINE-LT", "XAdES-BASELINE-T", "XAdES-BASELINE-B", "CMS-NOT-ETSI", "CAdES-BASELINE-LTA", "CAdES-BASELINE-LT", "CAdES-BASELINE-T", "CAdES-BASELINE-B", "CAdES-101733-C", "CAdES-101733-X", "CAdES-101733-A", "PDF-NOT-ETSI", "PAdES-BASELINE-LTA", "PAdES-BASELINE-LT", "PAdES-BASELINE-T", "PAdES-BASELINE-B", "PKCS7-B", "PKCS7-T", "PKCS7-LT", "PKCS7-LTA", "UNKNOWN" ]
+          },
+          "structuralValidation" : {
+            "$ref" : "#/components/schemas/XmlStructuralValidation"
+          },
+          "digestMatchers" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "DigestMatchers",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlDigestMatcher"
+            }
+          },
+          "basicSignature" : {
+            "$ref" : "#/components/schemas/XmlBasicSignature"
+          },
+          "signingCertificate" : {
+            "$ref" : "#/components/schemas/XmlSigningCertificate"
+          },
+          "certificateChain" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "CertificateChain",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlChainItem"
+            }
+          },
+          "contentType" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ContentType"
+            }
+          },
+          "mimeType" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "MimeType"
+            }
+          },
+          "contentIdentifier" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ContentIdentifier"
+            }
+          },
+          "contentHints" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ContentHints"
+            }
+          },
+          "signatureProductionPlace" : {
+            "$ref" : "#/components/schemas/XmlSignatureProductionPlace"
+          },
+          "commitmentTypeIndication" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "CommitmentTypeIndication",
+              "wrapped" : true
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Indication"
+              }
+            }
+          },
+          "signerRole" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "SignerRole"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlSignerRole"
+            }
+          },
+          "policy" : {
+            "$ref" : "#/components/schemas/XmlPolicy"
+          },
+          "signerDocumentRepresentations" : {
+            "$ref" : "#/components/schemas/XmlSignerDocumentRepresentations"
+          },
+          "foundCertificates" : {
+            "$ref" : "#/components/schemas/XmlFoundCertificates"
+          },
+          "foundRevocations" : {
+            "$ref" : "#/components/schemas/XmlFoundRevocations"
+          },
+          "foundTimestamps" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "FoundTimestamps",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlFoundTimestamp"
+            }
+          },
+          "signatureScopes" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "SignatureScopes",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlSignatureScope"
+            }
+          },
+          "signatureDigestReference" : {
+            "$ref" : "#/components/schemas/XmlSignatureDigestReference"
+          },
+          "signatureValue" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "SignatureValue"
+            },
+            "items" : {
+              "type" : "string",
+              "format" : "byte",
+              "xml" : {
+                "name" : "SignatureValue"
+              }
+            }
+          },
+          "counterSignature" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "CounterSignature",
+              "attribute" : true
+            }
+          },
+          "parent" : {
+            "$ref" : "#/components/schemas/XmlSignature"
+          },
+          "duplicated" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "Duplicated",
+              "attribute" : true
+            }
+          },
+          "daidentifier" : {
+            "type" : "string"
+          },
+          "pdfrevision" : {
+            "$ref" : "#/components/schemas/XmlPDFRevision"
+          }
+        }
+      },
+      "XmlSignatureDigestReference" : {
+        "required" : [ "digestMethod", "digestValue" ],
+        "type" : "object",
+        "properties" : {
+          "canonicalizationMethod" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "CanonicalizationMethod"
+            }
+          },
+          "digestMethod" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "DigestMethod"
+            },
+            "enum" : [ "SHA1", "SHA224", "SHA256", "SHA384", "SHA512", "SHA3_224", "SHA3_256", "SHA3_384", "SHA3_512", "RIPEMD160", "MD2", "MD5", "WHIRLPOOL" ]
+          },
+          "digestValue" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "DigestValue"
+            },
+            "items" : {
+              "type" : "string",
+              "format" : "byte",
+              "xml" : {
+                "name" : "DigestValue"
+              }
+            }
+          }
+        }
+      },
+      "XmlSignatureProductionPlace" : {
+        "type" : "object",
+        "properties" : {
+          "address" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Address"
+            }
+          },
+          "city" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "City"
+            }
+          },
+          "stateOrProvince" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "StateOrProvince"
+            }
+          },
+          "postalCode" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "PostalCode"
+            }
+          },
+          "countryName" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "CountryName"
+            }
+          }
+        }
+      },
+      "XmlSignatureScope" : {
+        "required" : [ "description", "scope" ],
+        "type" : "object",
+        "properties" : {
+          "scope" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Scope"
+            },
+            "enum" : [ "FULL", "PARTIAL", "DIGEST", "ARCHIVED" ]
+          },
+          "name" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Name"
+            }
+          },
+          "description" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Description"
+            }
+          },
+          "transformations" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Transformations",
+              "wrapped" : true
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Transformation"
+              }
+            }
+          },
+          "signerData" : {
+            "$ref" : "#/components/schemas/XmlSignerData"
+          }
+        }
+      },
+      "XmlSignerData" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          },
+          "referencedName" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ReferencedName"
+            }
+          },
+          "digestAlgoAndValue" : {
+            "$ref" : "#/components/schemas/XmlDigestAlgoAndValue"
+          }
+        }
+      },
+      "XmlSignerDocumentRepresentations" : {
+        "type" : "object",
+        "properties" : {
+          "hashOnly" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "HashOnly",
+              "attribute" : true
+            }
+          },
+          "docHashOnly" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "DocHashOnly",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlSignerInfo" : {
+        "required" : [ "issuer", "serialNumber" ],
+        "type" : "object",
+        "properties" : {
+          "issuer" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Issuer"
+            }
+          },
+          "serialNumber" : {
+            "type" : "integer",
+            "xml" : {
+              "name" : "SerialNumber"
+            }
+          },
+          "processed" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "Processed",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlSignerRole" : {
+        "required" : [ "role" ],
+        "type" : "object",
+        "properties" : {
+          "role" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Role"
+            }
+          },
+          "notAfter" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "NotAfter"
+            }
+          },
+          "notBefore" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "NotBefore"
+            }
+          },
+          "category" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Category",
+              "attribute" : true
+            },
+            "enum" : [ "CERTIFIED", "CLAIMED", "SIGNED" ]
+          }
+        }
+      },
+      "XmlSigningCertificate" : {
+        "type" : "object",
+        "properties" : {
+          "attributePresent" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "AttributePresent"
+            }
+          },
+          "digestValuePresent" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "DigestValuePresent"
+            }
+          },
+          "digestValueMatch" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "DigestValueMatch"
+            }
+          },
+          "issuerSerialMatch" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "IssuerSerialMatch"
+            }
+          },
+          "publicKey" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "PublicKey"
+            },
+            "items" : {
+              "type" : "string",
+              "format" : "byte",
+              "xml" : {
+                "name" : "PublicKey"
+              }
+            }
+          },
+          "certificate" : {
+            "$ref" : "#/components/schemas/XmlCertificate"
+          }
+        }
+      },
+      "XmlSimpleCertificateReport" : {
+        "type" : "object",
+        "properties" : {
+          "chain" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Chain",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlChainItem"
+            }
+          },
+          "validationTime" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "ValidationTime",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlStructuralValidation" : {
+        "type" : "object",
+        "properties" : {
+          "valid" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "Valid"
+            }
+          },
+          "message" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Message"
+            }
+          }
+        }
+      },
+      "XmlSubXCV" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          },
+          "rac" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "RAC"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlRAC"
+            }
+          },
+          "rfc" : {
+            "$ref" : "#/components/schemas/XmlRFC"
+          },
+          "revocationInfo" : {
+            "$ref" : "#/components/schemas/XmlRevocationInformation"
+          },
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          },
+          "trustAnchor" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "TrustAnchor",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlSubject" : {
+        "type" : "object",
+        "properties" : {
+          "commonName" : {
+            "type" : "string"
+          },
+          "surname" : {
+            "type" : "string"
+          },
+          "givenName" : {
+            "type" : "string"
+          },
+          "pseudonym" : {
+            "type" : "string"
+          },
+          "organizationName" : {
+            "type" : "string"
+          },
+          "organizationUnit" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "locality" : {
+            "type" : "string"
+          },
+          "state" : {
+            "type" : "string"
+          },
+          "country" : {
+            "type" : "string"
+          }
+        }
+      },
+      "XmlTLAnalysis" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          },
+          "countryCode" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "CountryCode",
+              "attribute" : true
+            }
+          },
+          "url" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "URL",
+              "attribute" : true
+            }
+          },
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlTimestamp" : {
+        "required" : [ "digestMatchers", "productionTime" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          },
+          "timestampFilename" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "TimestampFilename"
+            }
+          },
+          "archiveTimestampType" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ArchiveTimestampType"
+            },
+            "enum" : [ "XAdES", "XAdES_141", "CAdES", "CAdES_V2", "CAdES_V3", "CAdES_DETACHED", "PAdES" ]
+          },
+          "productionTime" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "ProductionTime"
+            }
+          },
+          "digestMatchers" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "DigestMatcher"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlDigestMatcher"
+            }
+          },
+          "basicSignature" : {
+            "$ref" : "#/components/schemas/XmlBasicSignature"
+          },
+          "signingCertificate" : {
+            "$ref" : "#/components/schemas/XmlSigningCertificate"
+          },
+          "certificateChain" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "CertificateChain",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlChainItem"
+            }
+          },
+          "timestampedObjects" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "TimestampedObjects",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlTimestampedObject"
+            }
+          },
+          "base64Encoded" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Base64Encoded"
+            },
+            "items" : {
+              "type" : "string",
+              "format" : "byte",
+              "xml" : {
+                "name" : "SignatureValue"
+              }
+            }
+          },
+          "digestAlgoAndValue" : {
+            "$ref" : "#/components/schemas/XmlDigestAlgoAndValue"
+          },
+          "type" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Type",
+              "attribute" : true
+            },
+            "enum" : [ "CONTENT_TIMESTAMP", "ALL_DATA_OBJECTS_TIMESTAMP", "INDIVIDUAL_DATA_OBJECTS_TIMESTAMP", "SIGNATURE_TIMESTAMP", "VALIDATION_DATA_REFSONLY_TIMESTAMP", "VALIDATION_DATA_TIMESTAMP", "ARCHIVE_TIMESTAMP" ]
+          },
+          "pdfrevision" : {
+            "$ref" : "#/components/schemas/XmlPDFRevision"
+          }
+        }
+      },
+      "XmlTimestampedObject" : {
+        "type" : "object",
+        "properties" : {
+          "token" : {
+            "$ref" : "#/components/schemas/XmlAbstractToken"
+          },
+          "category" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Category",
+              "attribute" : true
+            },
+            "enum" : [ "SIGNED_DATA", "SIGNATURE", "CERTIFICATE", "REVOCATION", "TIMESTAMP", "ORPHAN" ]
+          }
+        }
+      },
+      "XmlTrustAnchor" : {
+        "required" : [ "countryCode", "trustServiceName", "trustServiceProvider", "trustServiceProviderRegistrationId" ],
+        "type" : "object",
+        "properties" : {
+          "countryCode" : {
+            "type" : "string"
+          },
+          "trustServiceProvider" : {
+            "type" : "string"
+          },
+          "trustServiceProviderRegistrationId" : {
+            "type" : "string"
+          },
+          "trustServiceName" : {
+            "type" : "string"
+          }
+        }
+      },
+      "XmlTrustedList" : {
+        "required" : [ "url" ],
+        "type" : "object",
+        "properties" : {
+          "countryCode" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "CountryCode"
+            }
+          },
+          "url" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Url"
+            }
+          },
+          "sequenceNumber" : {
+            "type" : "integer",
+            "format" : "int32",
+            "xml" : {
+              "name" : "SequenceNumber"
+            }
+          },
+          "version" : {
+            "type" : "integer",
+            "format" : "int32",
+            "xml" : {
+              "name" : "Version"
+            }
+          },
+          "lastLoading" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "LastLoading"
+            }
+          },
+          "issueDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "IssueDate"
+            }
+          },
+          "nextUpdate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "NextUpdate"
+            }
+          },
+          "wellSigned" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "WellSigned"
+            }
+          },
+          "id" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Id",
+              "attribute" : true
+            }
+          },
+          "lotl" : {
+            "type" : "boolean",
+            "xml" : {
+              "name" : "LOTL",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlTrustedService" : {
+        "required" : [ "serviceType", "startDate", "status" ],
+        "type" : "object",
+        "properties" : {
+          "serviceNames" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "ServiceNames",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlLangAndValue"
+            }
+          },
+          "serviceType" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "ServiceType"
+            }
+          },
+          "status" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Status"
+            }
+          },
+          "startDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "StartDate"
+            }
+          },
+          "endDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "EndDate"
+            }
+          },
+          "capturedQualifiers" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "CapturedQualifiers",
+              "wrapped" : true
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "Qualifier"
+              }
+            }
+          },
+          "additionalServiceInfoUris" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "AdditionalServiceInfoUris",
+              "wrapped" : true
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "AdditionalServiceInfoUri"
+              }
+            }
+          },
+          "serviceSupplyPoints" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "ServiceSupplyPoints",
+              "wrapped" : true
+            },
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "ServiceSupplyPoint"
+              }
+            }
+          },
+          "expiredCertsRevocationInfo" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "ExpiredCertsRevocationInfo"
+            }
+          },
+          "serviceDigitalIdentifier" : {
+            "$ref" : "#/components/schemas/XmlCertificate"
+          }
+        }
+      },
+      "XmlTrustedServiceProvider" : {
+        "type" : "object",
+        "properties" : {
+          "trustedServices" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "TrustedServices",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlTrustedService"
+            }
+          },
+          "tl" : {
+            "$ref" : "#/components/schemas/XmlTrustedList"
+          },
+          "lotl" : {
+            "$ref" : "#/components/schemas/XmlTrustedList"
+          },
+          "tspnames" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/XmlLangAndValue"
+            }
+          },
+          "tspregistrationIdentifiers" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "xml" : {
+                "name" : "ServiceSupplyPoint"
+              }
+            }
+          }
+        }
+      },
+      "XmlVCI" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          }
+        }
+      },
+      "XmlVTS" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          },
+          "controlTime" : {
+            "type" : "string",
+            "format" : "date-time",
+            "xml" : {
+              "name" : "ControlTime"
+            }
+          }
+        }
+      },
+      "XmlXCV" : {
+        "type" : "object",
+        "properties" : {
+          "constraint" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "Constraint"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlConstraint"
+            }
+          },
+          "conclusion" : {
+            "$ref" : "#/components/schemas/XmlConclusion"
+          },
+          "title" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "Title",
+              "attribute" : true
+            }
+          },
+          "subXCV" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "SubXCV"
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/XmlSubXCV"
+            }
+          }
+        }
+      },
+      "CertificateToValidateDTO" : {
+        "type" : "object",
+        "properties" : {
+          "certificate" : {
+            "$ref" : "#/components/schemas/RemoteCertificate"
+          },
+          "certificateChain" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/RemoteCertificate"
+            }
+          },
+          "validationTime" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "RemoteCertificate" : {
+        "type" : "object",
+        "properties" : {
+          "encodedCertificate" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "format" : "byte"
+            }
+          }
+        }
+      }
+    }
+  }
+}
